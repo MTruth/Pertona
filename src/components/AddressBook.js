@@ -25,12 +25,13 @@ import {
   Avatar,
   Box,
 } from '@mui/material';
-import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -57,6 +58,7 @@ function AddressBook() {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [editingContactId, setEditingContactId] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -78,9 +80,15 @@ function AddressBook() {
     }
   };
 
-  const handleOpenDialog = () => {
+  const handleOpenDialog = (contact = null) => {
+    if (contact) {
+      setFormData(contact);
+      setEditingContactId(contact.id);
+    } else {
+      setFormData({ firstName: '', lastName: '', email: '', phone: '', categories: [], photoURL: '' });
+      setEditingContactId(null);
+    }
     setOpenDialog(true);
-    setFormData({ firstName: '', lastName: '', email: '', phone: '', categories: [], photoURL: '' });
     setImageFile(null);
     setImagePreview(null);
   };
@@ -120,7 +128,11 @@ function AddressBook() {
       };
 
       const contactsRef = collection(db, 'users', currentUser.uid, 'contacts');
-      await addDoc(contactsRef, contactData);
+      if (editingContactId) {
+        await updateDoc(doc(contactsRef, editingContactId), contactData);
+      } else {
+        await addDoc(contactsRef, contactData);
+      }
       handleCloseDialog();
       await fetchContacts();
     } catch (error) {
@@ -137,6 +149,10 @@ function AddressBook() {
     }
   };
 
+  const handleImportContacts = () => {
+    console.log('Import Contacts clicked');
+  };
+
   return (
     <Container maxWidth="md">
       <IconButton edge="start" color="inherit" onClick={() => navigate('/main')}>
@@ -146,11 +162,16 @@ function AddressBook() {
         Address Book
       </Typography>
       <Paper elevation={3} sx={{ p: 4, backgroundColor: '#ffffff'}}>
-        <Button variant="contained" onClick={handleOpenDialog}>
-          Add Contact
-        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+          <Button variant="contained" onClick={() => handleOpenDialog()}>
+            Add Contact
+          </Button>
+          <Button variant="outlined" onClick={handleImportContacts} sx={{ color: '#1976d2', borderColor: '#1976d2' }}>
+            Import Contacts
+          </Button>
+        </Box>
         <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Add New Contact</DialogTitle>
+          <DialogTitle>{editingContactId ? 'Edit Contact' : 'Add New Contact'}</DialogTitle>
           <DialogContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Avatar src={imagePreview} alt="Preview" sx={{ width: 56, height: 56, mr: 2 }} />
@@ -218,7 +239,7 @@ function AddressBook() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button onClick={handleSubmit}>Add</Button>
+            <Button onClick={handleSubmit}>{editingContactId ? 'Update' : 'Add'}</Button>
           </DialogActions>
         </Dialog>
         <List>
@@ -227,6 +248,9 @@ function AddressBook() {
               <Avatar src={contact.photoURL} alt={`${contact.firstName} ${contact.lastName}`} sx={{ mr: 2 }} />
               <ListItemText primary={`${contact.firstName} ${contact.lastName}`} secondary={contact.email} />
               <ListItemSecondaryAction>
+                <IconButton edge="end" onClick={() => handleOpenDialog(contact)}>
+                  <EditIcon />
+                </IconButton>
                 <IconButton edge="end" onClick={() => handleDelete(contact.id)}>
                   <DeleteIcon />
                 </IconButton>

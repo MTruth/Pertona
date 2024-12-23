@@ -3,7 +3,7 @@ import { Container, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import ContactsIcon from '@mui/icons-material/Contacts'; // Import a suitable icon
 import CreateIcon from '@mui/icons-material/Create'; // Icon for Create Message
-import ListAltIcon from '@mui/icons-material/ListAlt'; // New icon for Tones representing choices
+import PeopleIcon from '@mui/icons-material/People'; // Icon for Personas
 
 function MainScreen() {
   const navigate = useNavigate(); // Initialize the navigate function
@@ -12,8 +12,8 @@ function MainScreen() {
     navigate('/address-book'); // Navigate to the Address Book component
   };
 
-  const handleTonesClick = () => {
-    navigate('/tones'); // Navigate to the Tones component
+  const handlePersonasClick = () => {
+    navigate('/tones'); // Navigate to the Tones component instead of Personas
   };
 
   const handleCreateMessageClick = () => {
@@ -21,69 +21,74 @@ function MainScreen() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ my: 4, backgroundColor: '#f5f5f5', padding: 2 }}>
-      <Button 
-        onClick={handleAddressBookClick} 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          padding: 4, 
-          borderRadius: 2, 
-          boxShadow: 3, 
-          backgroundColor: '#ffffff', // White background for the Address Book section
-          width: '100%', // Set width to 100% for consistency
-          textTransform: 'none' // Prevent text transformation
-        }}
-      >
-        <ContactsIcon sx={{ fontSize: 64, color: '#1976d2' }} /> {/* Colored icon */}
-        <Typography variant="h5" align="center" gutterBottom>
-          Address Book
-        </Typography>
-      </Button>
-      <Button 
-        onClick={handleTonesClick} 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          padding: 4, 
-          borderRadius: 2, 
-          boxShadow: 3, 
-          backgroundColor: '#ffffff', // White background for the Tones section
-          width: '100%', // Set width to 100% for consistency
-          textTransform: 'none', // Prevent text transformation
-          mt: 2 // Margin top for spacing
-        }}
-      >
-        <ListAltIcon sx={{ fontSize: 64, color: '#1976d2' }} /> {/* New icon for Tones */}
-        <Typography variant="h5" align="center" gutterBottom>
-          Tones
-        </Typography>
-      </Button>
-      <Button 
-        onClick={handleCreateMessageClick} 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          padding: 4, 
-          borderRadius: 2, 
-          boxShadow: 3, 
-          backgroundColor: '#ffffff', // White background for the Create Message section
-          width: '100%', // Set width to 100% for consistency
-          textTransform: 'none', // Prevent text transformation
-          mt: 2 // Margin top for spacing
-        }}
-      >
-        <CreateIcon sx={{ fontSize: 64, color: '#1976d2' }} /> {/* Icon for Create Message */}
-        <Typography variant="h5" align="center" gutterBottom>
-          Create Message
-        </Typography>
-      </Button>
+    <Container maxWidth="sm" sx={{ my: 4, backgroundColor: '#ffffff', padding: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <Button 
+          onClick={handleAddressBookClick} 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            padding: 2, // Smaller padding for smaller buttons
+            borderRadius: 2, 
+            boxShadow: 2, 
+            backgroundColor: '#FF5722', // Set background color to match icon color
+            width: '100%', // Set width to 100% for full width
+            textTransform: 'none', // Prevent text transformation
+            color: 'white', // Set text color to white
+            mb: 2 // Add margin bottom for spacing
+          }}
+        >
+          <ContactsIcon sx={{ fontSize: 40 }} /> {/* Colored icon for Address Book */}
+          <Typography variant="h6" align="center" gutterBottom>
+            Address Book
+          </Typography>
+        </Button>
+        <Button 
+          onClick={handlePersonasClick} 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            padding: 2, // Smaller padding for smaller buttons
+            borderRadius: 2, 
+            boxShadow: 2, 
+            backgroundColor: '#2196F3', // Set background color to match icon color
+            width: '100%', // Set width to 100% for full width
+            textTransform: 'none', // Prevent text transformation
+            color: 'white', // Set text color to white
+            mb: 2 // Add margin bottom for spacing
+          }}
+        >
+          <PeopleIcon sx={{ fontSize: 40 }} /> {/* New icon for Personas */}
+          <Typography variant="h6" align="center" gutterBottom>
+            Personas
+          </Typography>
+        </Button>
+        <Button 
+          onClick={handleCreateMessageClick} 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            padding: 2, // Smaller padding for smaller buttons
+            borderRadius: 2, 
+            boxShadow: 2, 
+            backgroundColor: '#FF9800', // Set background color to match icon color
+            width: '100%', // Set width to 100% for full width
+            textTransform: 'none', // Prevent text transformation
+            color: 'white' // Set text color to white
+          }}
+        >
+          <CreateIcon sx={{ fontSize: 40 }} /> {/* Colored icon for Create Message */}
+          <Typography variant="h6" align="center" gutterBottom>
+            Create Message
+          </Typography>
+        </Button>
+      </Box>
     </Container>
   );
 }
